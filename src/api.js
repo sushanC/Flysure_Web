@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const API = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL + "/api", // backend base URL
+  baseURL: `${import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, "")}/api`,
   headers: {
     "Content-Type": "application/json",
   },
