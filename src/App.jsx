@@ -25,6 +25,9 @@ function App() {
           <Route path="/courses/:id" element={<SingleCourse />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          {/* ✅ Feedback Route - Now Public */}
+          <Route path="/feedback" element={<Feedback />} />
 
           {/* Protected Routes */}
           <Route
@@ -48,16 +51,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Payment />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Feedback Route */}
-          <Route
-            path="/feedback"
-            element={
-              <ProtectedRoute>
-                <Feedback />
               </ProtectedRoute>
             }
           />
