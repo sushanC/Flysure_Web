@@ -11,8 +11,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import Payment from "./pages/Payment";
-import Feedback from "./pages/Feedback";           // ✅ New Feedback page
-import AdminFeedbacks from "./pages/AdminFeedbackPage"; // ✅ Admin view for feedbacks
+import Feedback from "./pages/Feedback";                   // ✅ User Feedback
+import AdminFeedbackPage from "./pages/AdminFeedbackPage"; // ✅ Admin Feedback
 
 function App() {
   return (
