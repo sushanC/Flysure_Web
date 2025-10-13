@@ -11,8 +11,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import Payment from "./pages/Payment";
-import Feedback from "./pages/Feedback";                   // ✅ User Feedback
-import AdminFeedbackPage from "./pages/AdminFeedbackPage"; // ✅ Admin Feedback
+import Feedback from "./pages/Feedback";
+import AdminFeedbackPage from "./pages/AdminFeedbackPage";
 
 function App() {
   return (
@@ -26,8 +26,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* ✅ Feedback Route - Now Public */}
+          {/* ✅ FEEDBACK ROUTES - MULTIPLE PATHS TO ENSURE IT WORKS */}
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/submit-feedback" element={<Feedback />} />
+          <Route path="/feedback-form" element={<Feedback />} />
 
           {/* Protected Routes */}
           <Route
