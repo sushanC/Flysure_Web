@@ -11,13 +11,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import Payment from "./pages/Payment";
-
-
+import Feedback from "./pages/Feedback";           // ✅ New Feedback page
+import AdminFeedbacks from "./pages/AdminFeedbackPage"; // ✅ Admin view for feedbacks
 
 function App() {
   return (
-    
-      <Router>
+    <Router>
       <Navbar />
       <div className="p-4 container mx-auto">
         <Routes>
@@ -31,7 +30,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute> 
+              <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -44,33 +43,50 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
-  path="/admin"
-  element={
-    <ProtectedRoute role="admin">
-      <AdminDashboard />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin/users"
-  element={
-    <ProtectedRoute role="admin">
-      <AdminUsers />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/payment"
-  element={
-    <ProtectedRoute>
-      <Payment />
-    </ProtectedRoute>
-  }
-/>
+            path="/payment"
+            element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Feedback Route */}
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <Feedback />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/feedbacks"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminFeedbackPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* 404 Fallback */}
           <Route path="*" element={<p className="text-center mt-10">Page Not Found</p>} />
