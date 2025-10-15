@@ -1,118 +1,61 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [role, setRole] = useState(localStorage.getItem("role"));
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role") || "user");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Update role and token on route change
-  useEffect(() => {
-    setRole(localStorage.getItem("role"));
-    setToken(localStorage.getItem("token"));
-  }, [location]);
-
   const handleLogout = () => {
-    localStorage.clear();
-    setRole(null);
-    setToken(null);
-    navigate("/");
-    setMenuOpen(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    setRole("user");
+    navigate("/login");
   };
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
-  // Links for logged-in users
-  const userLinks = (
-    <>
-      <Link to="/dashboard" className="hover:text-amber-400">Dashboard</Link>
-      <Link to="/enrollments" className="hover:text-amber-400">My Courses</Link>
-      <Link to="/feedback" className="hover:text-amber-400">Submit Feedback</Link>
-      {role === "admin" && (
-        <>
-          <Link to="/admin" className="hover:text-amber-400 px-3">Admin Dashboard</Link>
-          <Link to="/admin/users" className="hover:text-amber-400 px-3">Users</Link>
-          <Link to="/admin/feedbacks" className="hover:text-amber-400 px-3">View Feedbacks</Link>
-        </>
-      )}
-      <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded ml-2">
-        Logout
-      </button>
-    </>
-  );
-
-  // Links for guests
-  const guestLinks = (
-    <>
-      <Link to="/login" className="hover:text-amber-400">Login</Link>
-      <Link to="/register" className="hover:text-amber-400">Register</Link>
-    </>
-  );
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    if (storedRole) setRole(storedRole);
+  }, []);
 
   return (
-    <nav className="bg-blue-600 text-white px-4 py-3 flex justify-between items-center relative shadow-md">
-      {/* Logo */}
-      <div
-        className="flex items-center cursor-pointer"
-        onClick={() => navigate("/")}
-      >
-        <img
-          src="/logo22.jpg"
-          alt="Flysure Logo"
-          className="h-10 w-10 mr-2 rounded-full object-cover"
-        />
-        <span className="text-xl font-bold">Flysure Academy</span>
-      </div>
+    <nav className="bg-white shadow p-4 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold">Flysure</Link>
 
-      {/* Desktop Links */}
-      <div className="hidden md:flex items-center space-x-4">
-        <Link to="/">Home</Link>
-        <Link to="/courses">Courses</Link>
-        {token ? userLinks : guestLinks}
-      </div>
-
-      {/* Mobile Hamburger */}
-      <div className="md:hidden flex items-center">
-        <button onClick={toggleMenu}>
-          {menuOpen ? <HiX className="h-6 w-6" /> : <HiMenu className="h-6 w-6" />}
+      {/* Hamburger menu for mobile */}
+      <div className="md:hidden">
+        <button onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="absolute top-full left-0 w-full bg-blue-600 flex flex-col items-start p-4 space-y-2 md:hidden z-20">
-          <Link onClick={toggleMenu} to="/">Home</Link>
-          <Link onClick={toggleMenu} to="/courses">Courses</Link>
-          {token ? (
-            <>
-              <Link onClick={toggleMenu} to="/dashboard">Dashboard</Link>
-              <Link onClick={toggleMenu} to="/enrollments">My Courses</Link>
-              <Link onClick={toggleMenu} to="/feedback">Submit Feedback</Link>
-              {role === "admin" && (
-                <>
-                  <Link onClick={toggleMenu} to="/admin">Admin Dashboard</Link>
-                  <Link onClick={toggleMenu} to="/admin/users">Users</Link>
-                  <Link onClick={toggleMenu} to="/admin/feedbacks">View Feedbacks</Link>
-                </>
-              )}
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 px-3 py-1 rounded w-full text-left"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link onClick={toggleMenu} to="/login">Login</Link>
-              <Link onClick={toggleMenu} to="/register">Register</Link>
-            </>
-          )}
-        </div>
-      )}
+      <ul className={`md:flex md:items-center gap-4 ${menuOpen ? "block" : "hidden"}`}>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/courses">Courses</Link></li>
+        <li><Link to="/feedback">Feedback</Link></li> {/* Visible to all users */}
+
+        {role === "admin" && (
+          <>
+            <li><Link to="/admin/feedbacks">Admin Feedback</Link></li>
+            <li><Link to="/admin">Admin Dashboard</Link></li>
+            <li><Link to="/admin/users">Users</Link></li>
+          </>
+        )}
+
+        {localStorage.getItem("token") ? (
+          <li>
+            <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">
+              Logout
+            </button>
+          </li>
+        ) : (
+          <>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/register">Register</Link></li>
+          </>
+        )}
+      </ul>
     </nav>
   );
 }

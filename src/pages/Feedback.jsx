@@ -1,85 +1,68 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api"; // ✅ use axios instance
 
 export default function Feedback() {
-  const [formData, setFormData] = useState({
-    name: "",
-    course: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", course: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
-  // Handle Input Change
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Submit Feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/feedback`,
-        formData
+      const res = await API.post("/feedback", form);
+      alert(res.data.message);
+      setForm({ name: "", course: "", message: "" });
+    } catch (err) {
+      console.error(err);
+      alert(
+        err.response?.data?.message || "Failed to submit feedback. Check console."
       );
-
-      if (response.status === 201) {
-        alert("Thank you for your feedback!");
-        navigate("/"); // Redirect to Home
-      }
-    } catch (error) {
-      console.error("Error submitting feedback:", error);
-      alert("Something went wrong. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">User Feedback</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            className="w-full border px-3 py-2 rounded"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="course"
-            placeholder="Your Course"
-            className="w-full border px-3 py-2 rounded"
-            value={formData.course}
-            onChange={handleChange}
-            required
-          />
-
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            className="w-full border px-3 py-2 rounded"
-            rows="4"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          ></textarea>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
-          >
-            Submit Feedback
-          </button>
-        </form>
-      </div>
+    <div className="max-w-md mx-auto p-6 bg-white shadow rounded mt-10">
+      <h2 className="text-xl font-bold mb-4">Submit Feedback</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="course"
+          placeholder="Course Name"
+          value={form.course}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded"
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={form.message}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 text-white py-2 px-4 rounded"
+        >
+          {loading ? "Submitting..." : "Submit Feedback"}
+        </button>
+      </form>
     </div>
   );
 }
